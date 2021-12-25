@@ -14,9 +14,9 @@ import com.annazou.myviews.R;
 
 public class InputDialog {
     private AlertDialog mDialog;
-    EditText mInputText;
-    TextView mWarnText;
-    Callbacks mCallback;
+    private EditText mInputText;
+    private TextView mWarnText;
+    private Callbacks mCallback;
 
     public interface Callbacks{
         void onInputChanged(InputDialog dialog, CharSequence s);
