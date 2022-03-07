@@ -92,4 +92,12 @@ public class InputDialog {
     public EditText getInputTextView(){
         return mInputText;
     }
+
+    public void show(){
+        mDialog.show();
+    }
+
+    public void dismiss(){
+        if(mDialog.isShowing()) mDialog.dismiss();
+    }
 }
