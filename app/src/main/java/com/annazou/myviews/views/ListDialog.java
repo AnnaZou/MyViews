@@ -2,36 +2,40 @@ package com.annazou.myviews.views;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.annazou.myviews.R;
 
-import java.util.List;
-
 public class ListDialog {
+    private Context mContext;
     private AlertDialog mDialog;
     private ListView mListView;
     private Callbacks mCallback;
     private BaseAdapter mAdapter;
+
+    private String mTitle;
 
     public interface Callbacks{
         void onItemSelected(ListDialog dialog, int which);
         void onNegativeClicked(ListDialog dialog);
     }
 
+    public interface AdapterCallback{
+        int getCount();
+        void onGetView(TextView item, int position);
+    }
+
     public ListDialog(Context context, String title){
+        mContext = context;
+        mTitle = title;
         final View addView = LayoutInflater.from(context).inflate(R.layout.list_dialog, null);
         mListView = addView.findViewById(R.id.list_dialog_list);
 
@@ -73,6 +77,10 @@ public class ListDialog {
         mListView.setAdapter(mAdapter);
     }
 
+    public void setListAdapter(AdapterCallback callback){
+        setListAdapter(new ListAdapter(callback));
+    }
+
     public void show(){
         if(mAdapter == null) return;
         mDialog.show();
@@ -80,5 +88,37 @@ public class ListDialog {
 
     public void dismiss(){
         if(mDialog.isShowing()) mDialog.dismiss();
+    }
+
+    private class ListAdapter extends BaseAdapter{
+        AdapterCallback adapterCallback;
+        public ListAdapter(AdapterCallback callback){
+            adapterCallback = callback;
+        }
+
+        @Override
+        public int getCount() {
+            return adapterCallback.getCount();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.list_dialog_item, null);
+            }
+            TextView name = convertView.findViewById(R.id.list_item_name);
+            adapterCallback.onGetView(name, position);
+            return convertView;
+        }
     }
 }
